@@ -1,0 +1,26 @@
+import React from 'react'
+import Container from './Container'
+
+
+function Home() {
+  return (
+    <Container>
+        <div className='flex flex-col flex-warp justify-center items-center mx-auto mt-9'>
+            <h1 className='p-4 font-bold text-neutral-700 text-5xl'>Blockchain Certificate Verification</h1>
+            <p className='mx-auto p-4 max-w-3xl text-gray-600 text-lg text-center leading-relaxed'>Secure, tamper-proof academic credential verification powered by
+                blockchain technology. Students, universities, and verifiers can trust our
+                immutable certification system for authentic document validation.
+            </p>
+            <div class="inline-flex items-center gap-2 bg-blue-50 mt-25 px-4 py-2 rounded-full">
+                <span class="relative flex w-3 h-3">
+                <span class="inline-flex absolute bg-lime-400 opacity-100 rounded-full w-full h-full animate-ping"></span>
+                <span class="inline-flex relative bg-green-500 rounded-full w-3 h-3"></span>
+                </span>
+                <span class="font-medium text-sky-600">Blockchain Network Active</span>
+            </div>
+        </div>
+    </Container>
+  )
+}
+
+export default Home
