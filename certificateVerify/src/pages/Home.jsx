@@ -1,5 +1,5 @@
 import React from 'react'
-import Container from './Container'
+import Container from '../components/Container'
 
 
 function Home() {
@@ -11,12 +11,12 @@ function Home() {
                 blockchain technology. Students, universities, and verifiers can trust our
                 immutable certification system for authentic document validation.
             </p>
-            <div class="inline-flex items-center gap-2 bg-blue-50 mt-25 px-4 py-2 rounded-full">
+            <div class="inline-flex items-center gap-2 bg-blue-100 hover:bg-blue-50 mt-25 px-4 py-2 rounded-full">
                 <span class="relative flex w-3 h-3">
                 <span class="inline-flex absolute bg-lime-400 opacity-100 rounded-full w-full h-full animate-ping"></span>
                 <span class="inline-flex relative bg-green-500 rounded-full w-3 h-3"></span>
                 </span>
-                <span class="font-medium text-sky-600 hover:text-sky-400">Blockchain Network Active</span>
+                <span class="font-medium text-sky-600 cursor-pointer">Blockchain Network Active</span>
             </div>
         </div>
     </Container>

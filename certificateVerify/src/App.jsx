@@ -1,20 +1,24 @@
-import Home from "./components/Home"
+import Home from "./pages/Home"
 import Navbar from "./components/Navbar"
 import AccessPortal from "./components/AccessPortal"
-import Footer from "./components/Footer"
+import { useRef ,useEffect} from "react"
 
 function App() {
+  
+  useEffect(() => {
+  window.scrollTo(0, 0);
+ }, []);
+ 
+  const PortalSelectionRef = useRef(null);
+
   
 
   return (
     <>
-      <Navbar/>
+      <Navbar PortalSelectionRef={PortalSelectionRef} />
       <Home/>
-      <AccessPortal/>
-      <Footer/>
-
-      
-    </>
+      <AccessPortal ref={PortalSelectionRef} />  
+      </>  
   )
 }
 

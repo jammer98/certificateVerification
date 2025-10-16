@@ -1,15 +1,14 @@
-import React from 'react'
-import Container from './Container'
+import React, { forwardRef } from 'react'
 
-function AccessPortal() {
+const AccessPortal = forwardRef((prop,ref) => {
+
   return (
-
 <>
     <div className='flex flex-col justify-center items-center mt-20 p-5'>
     <div className='font-semibold text-neutral-700 text-4xl'>Choose Your Access Portal</div>
     <p className='mx-auto p-4 max-w-3xl text-gray-600 text-lg text-center leading-relaxed'>Select your role to access the appropriate features and functionality</p>
     </div>
-    <div className='flex flex-row justify-center items-center gap-30 mx-auto mt-10 mb-40 max-w-6xl'>
+    <div ref={ref} className='flex flex-row justify-center items-center gap-30 mx-auto mt-10 mb-40 max-w-6xl'>
 
         <div className='shadow-lg hover:shadow-2xl p-6 border border-neutral-200 rounded-xl w-80 transition'>
             <div className="flex justify-center mb-3">
@@ -30,7 +29,7 @@ function AccessPortal() {
             </div>
             <div className='p-2 font-semibold text-neutral-700 text-lg text-center'>Student portal</div>
             <h1 className='mt-3 p-2 text-neutral-900 text-center'>Access and share your verified acadamic certificates</h1>
-            <button className='bg-sky-500 hover:bg-sky-300 px-5 py-2 rounded-lg w-full text-white text-center'>Access Portal</button>
+            <button className='bg-sky-500 hover:bg-sky-300 px-5 py-2 rounded-lg w-full text-white text-center cursor-pointer'>Access Portal</button>
         </div>
 
         <div className='shadow-lg hover:shadow-2xl p-6 border border-neutral-200 rounded-xl w-80 transition'>
@@ -49,7 +48,7 @@ function AccessPortal() {
              </div>
             <div className='p-2 font-semibold text-neutral-700 text-lg text-center'>University portal</div>
             <h1 className='mt-3 p-2 text-neutral-900 text-center'>Issue and manage blockchain-secured certificates</h1>
-            <button className='bg-sky-500 hover:bg-sky-300 px-5 py-2 rounded-lg w-full text-white text-center'>Access Portal</button>
+            <button className='bg-sky-500 hover:bg-sky-300 px-5 py-2 rounded-lg w-full text-white text-center cursor-pointer'>Access Portal</button>
         </div>
 
         <div className='shadow-lg hover:shadow-2xl p-6 border border-neutral-200 rounded-xl w-80 transition'>
@@ -69,12 +68,12 @@ function AccessPortal() {
             </div>
             <div className='p-2 font-semibold text-neutral-700 text-lg text-center'>Verifier portal</div>
             <h1 className='mt-3 p-2 text-neutral-900 text-center'>Instantly verify the authenticity of certificates</h1>
-            <button className='bg-sky-500 hover:bg-sky-300 px-5 py-2 rounded-lg w-full text-white text-center'>Access Portal</button>
+            <button className='bg-sky-500 hover:bg-sky-300 px-5 py-2 rounded-lg w-full text-white text-center cursor-pointer'>Access Portal</button>
         </div>
     </div>
 </>
   )
-}
+})
 
 export default AccessPortal
 
