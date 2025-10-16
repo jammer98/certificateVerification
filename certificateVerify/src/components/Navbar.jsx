@@ -7,7 +7,7 @@ function Navbar() {
     <nav className="top-0 z-50 sticky bg-white shadow-md">
     <Container>
       <div>
-        <h1 className='mr-0 text-2xl'> Certi-Chain </h1>
+        <h1 className='mr-0 text-neutral-900 text-3xl'> CertifyChain </h1>
       </div>
         <div className='flex justify-center gap-8'>
           <div className='flex flex-row justify-center items-center p-2 border border-neutral-200 rounded-xl text-neutral-600 hover:text-neutral-400'>
@@ -21,7 +21,7 @@ function Navbar() {
           <button className='ml-3 px-1.5 rounded-xl text-center'>login</button>
           </div>
 
-          <div className='flex justify-center items-center bg-blue-600 hover:bg-blue-400 p-2 border border-neutral-200 rounded-xl text-white'>
+          <div className='flex justify-center items-center bg-blue-500 hover:bg-blue-400 text-shadow-lg p-2 border border-neutral-200 rounded-xl text-white'>
             <svg xmlns="http://www.w3.org/2000/svg" 
             viewBox="0 0 24 24" 
             fill="currentColor" 

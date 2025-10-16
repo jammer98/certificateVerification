@@ -16,7 +16,7 @@ function Home() {
                 <span class="inline-flex absolute bg-lime-400 opacity-100 rounded-full w-full h-full animate-ping"></span>
                 <span class="inline-flex relative bg-green-500 rounded-full w-3 h-3"></span>
                 </span>
-                <span class="font-medium text-sky-600">Blockchain Network Active</span>
+                <span class="font-medium text-sky-600 hover:text-sky-400">Blockchain Network Active</span>
             </div>
         </div>
     </Container>
