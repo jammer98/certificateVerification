@@ -1,17 +1,11 @@
 import Home from "./pages/Home"
 import Navbar from "./components/Navbar"
 import AccessPortal from "./components/AccessPortal"
-import { useRef ,useEffect} from "react"
+import { useRef } from "react"
 
 function App() {
-  
-  useEffect(() => {
-  window.scrollTo(0, 0);
- }, []);
- 
-  const PortalSelectionRef = useRef(null);
 
-  
+  const PortalSelectionRef = useRef(null); // for the transfer of the actoion on the portal of the access portal 
 
   return (
     <>
