@@ -9,7 +9,7 @@ function UniversityDashboard() {
   return (
     <>
       <div className="top-0 z-50 sticky flex justify-between items-center p-2 max-w-7xl ml-31 bg-white">
-            <button onClick={()=>navigate("/")} className='flex justify-center items-center bg-white hover:bg-neutral-100 p-2 rounded-xl '>
+            <button onClick={()=>navigate("/")} className='flex justify-center items-center bg-white hover:bg-neutral-100 p-2 rounded-xl cursor-pointer'>
               <svg xmlns="http://www.w3.org/2000/svg" 
               fill="none" 
               viewBox="0 0 24 24" 
@@ -54,7 +54,7 @@ function UniversityDashboard() {
           </div>
 
           <div className='flex justify-start items-center w-full mb-4 mt-2 '>
-           <button onClick={()=>navigate("issuecertificateForm")} className='bg-[hsl(216,89%,55%)] p-2 text-center hover:bg-[hsl(216,89%,80%)] rounded-lg flex justify-start ml-5 mt-3 items-center tracking-wide'>
+           <button onClick={()=>navigate("/UniversityDashBoard/IssueNewCertificate")} className='bg-[hsl(216,89%,55%)] p-2 text-center hover:bg-[hsl(216,89%,80%)] rounded-lg flex justify-start ml-5 mt-3 items-center tracking-wide cursor-pointer'>
 
             <svg xmlns="http://www.w3.org/2000/svg" 
             viewBox="0 0 24 24" 

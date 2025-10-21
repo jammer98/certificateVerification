@@ -5,7 +5,7 @@ const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS;
 
 export const getContract = async () => {
   if (!window.ethereum) {
-    alert("MetaMask not detected!");
+    alert(" MetaMask not detected! , Please Install Metamask ");
     return null;
   }
 

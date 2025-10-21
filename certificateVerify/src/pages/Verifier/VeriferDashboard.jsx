@@ -9,7 +9,7 @@ function VeriferDashboard() {
  return (
    <>
       <div className="top-0 z-50 sticky flex justify-between items-center p-2 max-w-7xl ml-31 bg-white">
-            <button onClick={()=>navigate("/")} className='flex justify-center items-center bg-white hover:bg-neutral-100 p-2 rounded-xl '>
+            <button onClick={()=>navigate("/")} className='flex justify-center items-center bg-white hover:bg-neutral-100 p-2 rounded-xl cursor-pointer'>
               <svg xmlns="http://www.w3.org/2000/svg" 
               fill="none" 
               viewBox="0 0 24 24" 
@@ -76,7 +76,7 @@ function VeriferDashboard() {
             </div>
 
             <div className='w-full rounded-2xl mt-4'>
-              <button className='flex items-center bg-[hsl(216,89%,55%)] w-full rounded-xl justify-center p-3 text-white text-shadow-md hover:bg-[hsl(216,89%,80%)]'>
+              <button className='flex items-center bg-[hsl(216,89%,55%)] w-full rounded-xl justify-center p-3 text-white text-shadow-md hover:bg-[hsl(216,89%,80%)] cursor-pointer'>
                 <svg xmlns="http://www.w3.org/2000/svg" 
                       viewBox="0 0 24 24" 
                       fill="currentColor" 
