@@ -41,7 +41,7 @@ function handelSubmitForm(event){
               </svg>
           </div>
     
-          <div className='flex flex-warp flex-col bg-neutral-100 max-w-2xl mx-auto my-auto mt-15 rounded-2xl p-4'>
+          <div className='flex flex-warp flex-col bg-neutral-50 max-w-2xl mx-auto my-auto mt-15 rounded-2xl p-4'>
             <div className='flex flex-warp items-center gap-2 text-2xl ml-5'>
               <svg xmlns="http://www.w3.org/2000/svg" 
               fill="none" 

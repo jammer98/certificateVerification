@@ -52,7 +52,7 @@ const navigate = useNavigate();
               <h1 className='ml-4 font-bold text-neutral-700 text-2xl'>Admin DashBoard</h1>
           </div>
 
-          <button onClick={()=>navigate('Issuerpage')} className='flex justify-center items-center mb-4 mt-2 ml-4 bg-[hsl(216,89%,55%)] mr-7 px-5 py-1 border border-blue-300 rounded-md text-white text-center hover:bg-[hsl(216,89%,65%)] cursor-pointer'>
+          <button onClick={()=>navigate('IssuerPage')} className='flex justify-center items-center mb-4 mt-2 ml-4 bg-[hsl(216,89%,55%)] mr-7 px-5 py-2 border border-blue-300 rounded-md text-white text-center hover:bg-[hsl(216,89%,65%)] cursor-pointer'>
               <svg xmlns="http://www.w3.org/2000/svg" 
               fill="none" 
               viewBox="0 0 24 24" 

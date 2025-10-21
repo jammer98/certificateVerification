@@ -9,6 +9,7 @@ import VeriferDashboard from "./pages/Verifier/VeriferDashboard"
 import AdminDashBoard from "./pages/Admin/AdminDashBoard"
 import LoginPage from "./pages/LoginPage"
 import IssueNewCertificate from "./pages/University/IssueNewCertificate"
+import IssuerPage from "./pages/Admin/IssuerPage"
 
 
 function MainLayout( { children,PortalSelectionRef } ){
@@ -76,6 +77,13 @@ function App() {
                   element={
                     <NoNavbarLayout>
                       <AdminDashBoard/>
+                    </NoNavbarLayout>
+                  }
+            />
+            <Route path="/AdminDashBoard/IssuerPage"
+                  element={
+                    <NoNavbarLayout>
+                      <IssuerPage/>
                     </NoNavbarLayout>
                   }
             />
