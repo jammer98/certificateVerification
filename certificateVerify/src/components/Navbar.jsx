@@ -26,6 +26,36 @@ function Navbar({PortalSelectionRef}) {
       console.error("MetaMask connection failed:", error);
     }
   }
+
+
+  // const disconnectWallet = () => {
+  //   setWalletAddress(null);
+  // }
+
+
+useEffect(() => {
+  async function checkConnection() {
+    if (window.ethereum) {
+      const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+      if (accounts.length > 0) {
+        setWalletAddress(accounts[0]);
+      }
+    }
+  }
+  checkConnection();
+
+  // Listen for change
+  window.ethereum?.on("accountsChanged", (accounts) => {
+    if (accounts.length > 0) {
+      setWalletAddress(accounts[0]);
+    } else {
+      setWalletAddress(null);
+    }
+  });
+}, []);
+
+
+
  
   // const shortAddress = (address) =>{
   //   address ? "{address.slice(0,6)}...{address.slice(-4)}" : "";
@@ -60,7 +90,22 @@ function Navbar({PortalSelectionRef}) {
               stroke-linejoin="round" 
               d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
               </svg>
-              <button onClick={()=>navigate("/AdminDashBoard")}className='ml-3 px-1.5 rounded-xl text-center cursor-pointer'> Admin </button>
+
+              <button onClick={()=> { 
+                                    if(!walletAddress){
+                                        alert("Please connect MetaMask wallet first");    
+                                    } 
+                                    if(walletAddress.toLowerCase() === adminWalletAddress.toLowerCase()){
+                                        navigate("/AdminDashBoard")
+                                    }
+                                    else{
+                                        alert("Not authorized !! Only Admin can access this page");
+                                    }
+                                      }
+                                }
+                                className='ml-3 px-1.5 rounded-xl text-center cursor-pointer'>
+              Admin 
+              </button>
             </div> 
           <div className='flex flex-row justify-center items-center p-2 border border-neutral-200 rounded-xl text-neutral-600 hover:text-neutral-400 cursor-pointer'>
             <svg xmlns="http://www.w3.org/2000/svg" 
@@ -93,7 +138,7 @@ function Navbar({PortalSelectionRef}) {
             <path d="M2.273 5.625A4.483 4.483 0 0 1 5.25 4.5h13.5c1.141 0 2.183.425 2.977 1.125A3 3 0 0 0 18.75 3H5.25a3 3 0 0 0-2.977 2.625ZM2.273 8.625A4.483 4.483 0 0 1 5.25 7.5h13.5c1.141 0 2.183.425 2.977 1.125A3 3 0 0 0 18.75 6H5.25a3 3 0 0 0-2.977 2.625ZM5.25 9a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h13.5a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3H15a.75.75 0 0 0-.75.75 2.25 2.25 0 0 1-4.5 0A.75.75 0 0 0 9 9H5.25Z" 
             />
           </svg>
-          <button onClick={connectWallet} className='ml-3 rounded-xl text-center cursor-pointer'> Connect MetaMask</button>
+           <button onClick={connectWallet} className='ml-3 rounded-xl text-center cursor-pointer'> Connect MetaMask</button>
           </div>) }
         </div>
     </Container>

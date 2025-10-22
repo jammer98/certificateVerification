@@ -1,8 +1,21 @@
 import React, { forwardRef } from 'react'
 import { useNavigate } from 'react-router'
+
+
+
 const AccessPortal = forwardRef((prop,ref) => {
 
     const navigate = useNavigate();
+
+//     const chekWallectConnected = async () =>{
+//         const accounts = window.ethereum.request({ method: 'eth_accounts' });
+//         if (!accounts || accounts.length === 0) {
+//             alert("Connect MetaMask first");
+//             return;
+//         }else{
+//             return true;
+//         }
+// }
 
   return (
 <>
