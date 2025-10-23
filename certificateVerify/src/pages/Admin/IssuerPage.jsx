@@ -1,9 +1,35 @@
 import React from 'react'
 import { useNavigate } from 'react-router'
+import { useState } from 'react';
+import { getContract } from '../../utils/provider';
+
 
 function IssuerPage() {
 
+
+    const [issuerAddress,setIssuerAddress] = useState("");
+
+    const handleAddIssuer = async () =>{
+      try{
+        const contract = await getContract();
+
+        if(!contract){ 
+          console.error("getcontract function didnt work");
+        }
+
+        const tx = await contract.authorizeIssuer(issuerAddress);
+        await tx.wait();
+
+        alert(" Issuer authorized successfully !!! ");
+        setIssuerAddress("");
+      }
+      catch(error){
+        console.log("trasaction failed ! ", error);
+      }
+    }
+
     const navigate = useNavigate();
+    
 
     
 
@@ -71,7 +97,7 @@ function IssuerPage() {
             <div className='w-full mt-4 text-lg text-neutral-400'>Issuer's Ethereum Address *</div>
 
             <div className='bg-neutral-200 w-full rounded-2xl hover:bg-neutral-100 mt-4'>
-              <input type="text" placeholder='Enter Ethereum Address (eg.0xe1643...)' className='w-full p-4 rounded-2xl outline-none' />
+              <input type="text" value={issuerAddress} onChange={(event) => setIssuerAddress(event.target.value)} placeholder='Enter Ethereum Address (eg.0xe1643...)' className='w-full p-4 rounded-2xl outline-none' />
             </div>
 
             <div className='text-neutral-500 mt-4'>
@@ -79,7 +105,7 @@ function IssuerPage() {
             </div>
 
             <div className='w-full rounded-2xl mt-4'>
-              <button className='flex items-center bg-[hsl(216,89%,55%)] w-full rounded-xl justify-center p-3 text-white text-shadow-md hover:bg-[hsl(216,89%,80%)] cursor-pointer '>
+              <button onClick={handleAddIssuer} className='flex items-center bg-[hsl(216,89%,55%)] w-full rounded-xl justify-center p-3 text-white text-shadow-md hover:bg-[hsl(216,89%,80%)] cursor-pointer '>
                 <svg xmlns="http://www.w3.org/2000/svg" 
                 fill="none" 
                 viewBox="0 0 24 24" 
@@ -106,3 +132,45 @@ export default IssuerPage
 
 
 
+
+
+// import { useState } from "react";
+// import { getContract } from "../provider";   // your provider.js
+
+// function IssuerPage() {
+//   const [issuerAddress, setIssuerAddress] = useState("");
+
+//   async function handleAddIssuer(){
+//     try {
+//       const contract = await getContract();
+//       if(!contract) return;
+
+//       const tx = await contract.authorizeIssuer(issuerAddress);
+//       await tx.wait();    // wait for block confirmation
+
+//       alert("Issuer Added Successfully ✅");
+
+//     } catch(err){
+//       console.log(err);
+//       alert("Transaction Failed ❌");
+//     }
+//   }
+
+//   return (
+//     <>
+//       {/* your UI ... */}
+//       <input 
+//         type="text"
+//         placeholder="Enter Ethereum Address"
+//         onChange={(e)=>setIssuerAddress(e.target.value)}
+//       />
+
+//       <button onClick={handleAddIssuer}>Add Issuer</button>
+//     </>
+//   )
+// }
+
+
+
+
+// const isIssuer = await contract.authorizedIssuers(address); I can access this from my front-end because this authoried issuer is stored in the blockchain 

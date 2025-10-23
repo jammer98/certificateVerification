@@ -76,7 +76,7 @@ useEffect(() => {
     <nav className="top-0 z-50 sticky bg-white shadow-md">
     <Container>
       <div>
-        <button onClick={()=> navigate("/")} className='mr-0 text-neutral-900 text-3xl hover:text-neutral-700'> CertifyChain </button>
+        <button onClick={()=> navigate("/")} className='mr-0 text-neutral-900 text-3xl hover:text-neutral-700'> Certify-Chain </button>
       </div>
         <div className='flex justify-center gap-8'>
           <div className='flex flex-row justify-center items-center p-2 border border-neutral-200 rounded-xl text-neutral-600 hover:text-neutral-400 cursor-pointer'>

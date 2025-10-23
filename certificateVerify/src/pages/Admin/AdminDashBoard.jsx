@@ -1,9 +1,36 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
+import { getContract } from '../../utils/provider';
+
 
 function AdminDashBoard() {
 
-const navigate = useNavigate();
+  const [issuers,setIssuers] = useState([]);
+
+  useEffect(()=>{
+    const fetchIssuers = async () =>{
+      try {
+        const contract = await getContract();
+        if(!contract){
+          console.error(" no contract babes !!! ");
+        }
+
+        const events =  await contract.queryFilter("IssuerAuthorized");
+        const addresses = events.map((e) => e.args.issuer);
+        setIssuers(addresses);
+
+      } 
+      catch (error) {
+        console.error("could not fetch issuers",error);
+      }
+    }
+    fetchIssuers();
+
+  },[])
+
+  const navigate = useNavigate();
+
+
 
 
   return (
@@ -64,7 +91,9 @@ const navigate = useNavigate();
               <span className='ml-3'>Add Issuer</span>
           </button>
 
-          <div className='flex flex-col flex-1 justify-start items-center mt-2 rounded-xl w-full border-1 border-neutral-200 shadow-md'>
+
+          {issuers.length === 0 ? (
+            <div className='flex flex-col flex-1 justify-start items-center mt-2 rounded-xl w-full border-1 border-neutral-200 shadow-md'>
              <svg xmlns="http://www.w3.org/2000/svg" 
              fill="none" 
              viewBox="0 0 24 24"
@@ -75,9 +104,17 @@ const navigate = useNavigate();
               stroke-linejoin="round" 
               d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z" />
               </svg>
-
               <p className='mb-2 font-bold text-neutral-500 text-3xl'>No Issuers Yet</p>
           </div>
+        ) : (
+            <div className='bg-red-300 text-center w-full flex-1 mt-2 rounded-xl border-1 border-neutral-200 shadow-md'>
+              <ul className="list-disc ml-6 p-5">
+                {issuers.map((issuer, index) => (
+                    <li key={index} className="text-neutral-700 text-lg">{issuer}</li>))}
+              </ul>
+            </div>  
+          )}
+          
         </div>  
     </div>   
     </>   
