@@ -1,9 +1,51 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
+import { ethers } from 'ethers';
+import { getContract } from '../../utils/provider';
 
 function UniversityDashboard() {
 
   const navigate = useNavigate(); 
+
+  const [certificates, setCertificates] = useState([]);
+  const [currentAccount,setCurrentAccount] = useState(null);
+
+  useEffect(() =>{
+    async function fetchCertificates(){
+
+      try {
+        const contract = getContract();
+        
+        if(!contract){
+          console.log("no contract babess");
+          return;
+        }
+
+        const signer = await contract.signer.getAddress();
+        setCurrentAccount(signer);
+
+        const events = await contract.queryFilter(contract.filters.CertificateIssued());
+
+        // Map events to certificate objects
+        const certs = events
+          .filter((event) => event.args) // sanity check
+          .map((event) => ({
+            certificateId: event.args.certificateId,
+            studentName: event.args.studentName,
+            courseName: event.args.courseName,
+            issuer: signer
+          }))
+          // filter only certificates issued by this wallet
+          .filter((cert) => cert.issuer.toLowerCase() === signer.toLowerCase());
+
+        setCertificates(certs);
+      } 
+      catch (error) {
+        console.error("error fetching the certificates",error);
+      }
+      
+    }
+  },[])
 
 
   return (
@@ -66,22 +108,44 @@ function UniversityDashboard() {
            </button>
           </div>
 
-          <div className='flex flex-col flex-1 justify-start items-center mt-2 rounded-xl w-full'>
-             <svg xmlns="http://www.w3.org/2000/svg" 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke-width="1.5" 
-                stroke="currentColor" 
-                className ="mt-36 mb-6 size-14 text-neutral-500 ">
+
+            {certificates.length === 0 ? (
+              <div className='flex flex-col flex-1 justify-start items-center mt-2 rounded-xl w-full'>
+                <svg xmlns="http://www.w3.org/2000/svg" 
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke-width="1.5" 
+                  stroke="currentColor" 
+                  className ="mt-36 mb-6 size-14 text-neutral-500 ">
                 <path stroke-linecap="round" 
-                stroke-linejoin="round" 
-                d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" 
+                  stroke-linejoin="round" 
+                  d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" 
                 />
                 </svg>
-              <p className='mb-2 font-bold text-neutral-700 text-3xl'>Ready to Issue Certificates</p>
-              <p className='text-neutral-400 text-lg leading-10 tracking-tight text-balance text-center'> Create blockchain-secured certificates for your students each certificate will be permanently recorded and verifiable.</p>
-
-          </div>
+                  <p className='mb-2 font-bold text-neutral-700 text-3xl'>Ready to Issue Certificates</p>
+                  <p className='text-neutral-400 text-lg leading-10 tracking-tight text-balance text-center'> Create blockchain-secured certificates for your students each certificate will be permanently recorded and verifiable.</p>
+            </div>
+            ) : (
+               <table className='w-full border border-gray-300 rounded-lg'>
+            <thead className='bg-gray-100'>
+              <tr>
+                <th className='border p-2'>Certificate ID</th>
+                <th className='border p-2'>Student Name</th>
+                <th className='border p-2'>Course Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              {certificates.map((cert, idx) => (
+                <tr key={idx} className='hover:bg-gray-50'>
+                  <td className='border p-2'>{cert.certificateId}</td>
+                  <td className='border p-2'>{cert.studentName}</td>
+                  <td className='border p-2'>{cert.courseName}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+            ) }
+          
         </div>  
     </div>   
     </> 

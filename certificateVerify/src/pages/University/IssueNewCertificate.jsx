@@ -1,14 +1,49 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router'
+import { getContract } from '../../utils/provider';
 
 function IssueNewCertificate() {
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
-function handelSubmitForm(event){
+  const [form,setForm] = useState({
+            certificateId:"",
+            studentName:"",
+            courseName:"",
+            issueDate:""
+  });
+
+  function handleChange(e){
+    setForm({ ...form , [e.target.name]: e.target.value } );
+  }
+
+
+async function handelSubmitForm(event){
   event.preventDefault();
 
-  console.log("form submitted");
+  try {
+    const contract = await getContract();
+
+    if(!contract){
+      console.log("no contract babess !!");
+      return;
+    }
+
+    const tx = await contract.issueCertificate( form.certificateId,
+                                                form.studentName,
+                                                form.courseName,
+                                                form.issueDate
+    );
+
+    await tx.wait();
+
+    alert(" Certificate Issued Sucessfully !!");
+  } 
+  
+  catch (error) {
+    console.error("form not submitted !!",error);
+    alert("Failed to Issue Certificate !");
+  }
 }
 
 
@@ -60,23 +95,23 @@ function handelSubmitForm(event){
                   <div className='flex flex-col w-xl mt-3'>
 
                     <div className='p-3 flex flex-col w-full'>
-                      <label htmlFor="certificateid" className='text-lg ml-4 mb-2'>Certificate Id</label>
-                      <input type="text" name="CertificateId" placeholder='Enter the Certificate Id * ({UNI-CODE} - {YEAR} - {ROLLNO} - {COURSE})' className='ml-4 border-1 border-neutral-300 bg-neutral-100 rounded-lg p-3 w-full outline-none hover:bg-white'/>
+                      <label htmlFor="certificateId" className='text-lg ml-4 mb-2'>Certificate Id</label>
+                      <input type="text" name="certificateId" onChange={handleChange} value={form.certificateId} placeholder='Enter the Certificate Id * ({UNI-CODE} - {YEAR} - {ROLLNO} - {COURSE})' className='ml-4 border-1 border-neutral-300 bg-neutral-100 rounded-lg p-3 w-full outline-none hover:bg-white'/>
                     </div>
 
                     <div className='p-3 flex flex-col'>
-                      <label htmlFor="Student Name" className='text-lg ml-4 mb-2'>Student Name</label>
-                    <input type="text" name="StudentName" placeholder='Student Name *' className='ml-4 border rounded-lg p-3 w-full border-neutral-300 bg-neutral-2100 outline-none hover:bg-white'/>
+                      <label htmlFor="studentName" className='text-lg ml-4 mb-2'>Student Name</label>
+                    <input type="text" name="studentName" value={form.studentName} onChange={handleChange} placeholder='Student Name *' className='ml-4 border rounded-lg p-3 w-full border-neutral-300 bg-neutral-2100 outline-none hover:bg-white'/>
                     </div>
 
                     <div className='p-3 flex flex-col'>
-                      <label htmlFor="Course Name" className='text-lg ml-4 mb-2'>Course Name</label>
-                    <input type="text" name="CourseName" placeholder='Course Name *' className='ml-4 border-1 rounded-lg p-3 w-full border-neutral-300 bg-neutral-100 outline-none hover:bg-white'/>
+                      <label htmlFor="courseName" className='text-lg ml-4 mb-2'>Course Name</label>
+                    <input type="text" name="courseName" value={form.courseName} onChange={handleChange} placeholder='Course Name *' className='ml-4 border-1 rounded-lg p-3 w-full border-neutral-300 bg-neutral-100 outline-none hover:bg-white'/>
                     </div>
 
                     <div className='p-3 flex flex-col'>
-                      <label htmlFor="Issue Date" className='text-lg ml-4 mb-2'>Issue Date</label>
-                    <input type="date" name="issueDate" placeholder='Issue Date * [dd-mm-yyyy]' className='ml-4 border-1 rounded-lg p-3 w-full border-neutral-300 bg-neutral-100 hover:bg-white outline-none'/>
+                      <label htmlFor="issueDate" className='text-lg ml-4 mb-2'>Issue Date</label>
+                    <input type="date" name="issueDate" value={form.issueDate} onChange={handleChange} placeholder='Issue Date * [dd-mm-yyyy]' className='ml-4 border-1 rounded-lg p-3 w-full border-neutral-300 bg-neutral-100 hover:bg-white outline-none'/>
                     </div>
 
                     <div className='text-center mt-6 mb-3 flex flex-row justify-center items-center '>

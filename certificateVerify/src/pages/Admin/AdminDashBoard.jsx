@@ -107,10 +107,13 @@ function AdminDashBoard() {
               <p className='mb-2 font-bold text-neutral-500 text-3xl'>No Issuers Yet</p>
           </div>
         ) : (
-            <div className='bg-red-300 text-center w-full mt-2 rounded-xl border-1 border-neutral-200 shadow-md'>
-              <ul className="list-disc ml-6 p-5">
+            <div className='bg-neutral-50 text-center w-full mt-2 rounded-xl border-1 border-neutral-200 shadow-md h-screen '>
+              <ul className="p-5 bg-neutral-200 rounded-2xl w-full shadow-md shadow-neutral-300 list-decimal cursor-pointer pl-9 hover:bg-neutral-100">
                 {issuers.map((issuer, index) => (
-                    <li key={index} className="text-neutral-700 text-lg">{issuer}</li>))}
+                  <div className='text-neutral-700 text-xl ml-8'>
+                        <li key={index}>{issuer}</li>
+                    </div>
+                  ))}
               </ul>
             </div>  
           )}

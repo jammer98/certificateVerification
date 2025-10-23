@@ -35,7 +35,7 @@ const AccessPortal = forwardRef((prop,ref) => {
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className="size-25 bg-[hsl(205,100%,94%)] p-5 rounded-full"
+                className="size-25 bg-[hsl(205,100%,86%)] p-5 rounded-full"
                 >
              <path
                 strokeLinecap="round"
