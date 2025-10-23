@@ -10,7 +10,7 @@ function Footer() {
     <footer className="bg-gray-900 text-gray-300 py-14 rounded-t-2xl">
       <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center">
         <div>
-          <h2 className="text-xl font-semibold text-white">CertifyChain</h2>
+          <h2 className="text-xl font-semibold text-white">Certify-Chain</h2>
          <p className="text-sm">Blockchain-based Certificate Verification System</p>
         </div>
 

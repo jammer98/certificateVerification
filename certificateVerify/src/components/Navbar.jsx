@@ -1,31 +1,33 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Container from './Container'
 import { useNavigate } from 'react-router';
+import { useAccountContext } from '../Context/AccountContext';
  
 function Navbar({PortalSelectionRef}) {
 
-  const navigate =  useNavigate();
+  const navigate =  useNavigate(); 
 
-  const [walletAddress,setWalletAddress] = useState(null);
+  const {walletAddress,connectWallet} = useAccountContext();
+  
   // const [logindropdown,setLogindropdown] = useState(false);
   // const dropdownRef = useRef(null);
   const adminWalletAddress = "0x73E3893a007022500df2a1674e988a592b7aA23F";
 
-  const connectWallet = async () => {
-    try {
-      if (window.ethereum) {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const account = accounts[0];
-        setWalletAddress(account);
-        // 👇 scroll down smoothly to the portal cards section
-        PortalSelectionRef.current?.scrollIntoView({ behavior: 'smooth' });
-      } else {
-        alert("Please install MetaMask to continue!");
-      }
-    } catch (error) {
-      console.error("MetaMask connection failed:", error);
-    }
-  }
+  // const connectWallet = async () => {
+  //   try {
+  //     if (window.ethereum) {
+  //       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+  //       const account = accounts[0];
+  //       setWalletAddress(account);
+  //       // 👇 scroll down smoothly to the portal cards section
+  //       PortalSelectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+  //     } else {
+  //       alert("Please install MetaMask to continue!");
+  //     }
+  //   } catch (error) {
+  //     console.error("MetaMask connection failed:", error);
+  //   }
+  // }
 
 
   // const disconnectWallet = () => {
@@ -33,26 +35,26 @@ function Navbar({PortalSelectionRef}) {
   // }
 
 
-useEffect(() => {
-  async function checkConnection() {
-    if (window.ethereum) {
-      const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-      if (accounts.length > 0) {
-        setWalletAddress(accounts[0]);
-      }
-    }
-  }
-  checkConnection();
+// useEffect(() => {
+//   async function checkConnection() {
+//     if (window.ethereum) {
+//       const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+//       if (accounts.length > 0) {
+//         setWalletAddress(accounts[0]);
+//       }
+//     }
+//   }
+//   checkConnection();
 
-  // Listen for change
-  window.ethereum?.on("accountsChanged", (accounts) => {
-    if (accounts.length > 0) {
-      setWalletAddress(accounts[0]);
-    } else {
-      setWalletAddress(null);
-    }
-  });
-}, []);
+//   // Listen for change
+//   window.ethereum?.on("accountsChanged", (accounts) => {
+//     if (accounts.length > 0) {
+//       setWalletAddress(accounts[0]);
+//     } else {
+//       setWalletAddress(null);
+//     }
+//   });
+// }, []);
 
 
 
@@ -93,7 +95,8 @@ useEffect(() => {
 
               <button onClick={()=> { 
                                     if(!walletAddress){
-                                        alert("Please connect MetaMask wallet first");    
+                                        alert("Please connect MetaMask wallet first");
+                                        return;    
                                     } 
                                     if(walletAddress.toLowerCase() === adminWalletAddress.toLowerCase()){
                                         navigate("/AdminDashBoard")

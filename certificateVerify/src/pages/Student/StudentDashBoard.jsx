@@ -1,7 +1,9 @@
 import React from 'react'
 import { useNavigate } from 'react-router'
+import { useAccountContext } from '../../Context/AccountContext';
 
 function StudentDashBoard() {
+
 
   const navigate = useNavigate();
   
