@@ -10,6 +10,7 @@ import AdminDashBoard from "./pages/Admin/AdminDashBoard"
 import LoginPage from "./pages/LoginPage"
 import IssueNewCertificate from "./pages/University/IssueNewCertificate"
 import IssuerPage from "./pages/Admin/IssuerPage"
+import Footer from "./components/Footer"
 
 
 function MainLayout( { children,PortalSelectionRef } ){
@@ -39,6 +40,7 @@ function App() {
                 <MainLayout PortalSelectionRef={PortalSelectionRef}> 
                   <Home/>
                   <AccessPortal ref={PortalSelectionRef} />
+                  <Footer/>
                 </MainLayout>
                 } 
           />
@@ -100,6 +102,12 @@ function App() {
 }
 
 export default App
+
+
+
+// first - Hsl(214,25%,56%)
+// second - hsl(208,31%,35%)
+// third - hsl(215,40%,19%)
 
 
 

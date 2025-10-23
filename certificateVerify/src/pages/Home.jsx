@@ -3,9 +3,13 @@ import Container from '../components/Container'
 
 
 function Home() {
+
+  // first - Hsl(214,25%,56%)
+// second - hsl(208,31%,35%)
+
   return (
     <Container>
-        <div className='flex flex-col flex-warp justify-center items-center mx-auto mt-9'>
+        <div className='flex flex-col flex-warp justify-center items-center mx-auto mt-9 '>
             <h1 className='p-4 font-bold text-neutral-700 text-5xl'>Blockchain Certificate Verification</h1>
             <p className='mx-auto p-4 max-w-3xl text-gray-600 text-lg text-center leading-relaxed'>Secure, tamper-proof academic credential verification powered by
                 blockchain technology. Students, universities, and verifiers can trust our

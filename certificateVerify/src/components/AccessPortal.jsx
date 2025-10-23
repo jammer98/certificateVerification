@@ -19,7 +19,7 @@ const AccessPortal = forwardRef((prop,ref) => {
 
   return (
 <>
-    <div className='flex flex-col justify-center items-center mt-20 p-5'>
+    <div className='flex flex-col justify-center items-center mt-20 p-5 '>
     <div className='font-semibold text-neutral-700 text-4xl'>Choose Your Access Portal</div>
     <p className='mx-auto p-4 max-w-3xl text-gray-600 text-lg text-center leading-relaxed'>Select your role to access the appropriate features and functionality</p>
     </div>
