@@ -1,25 +1,24 @@
-/**
- *Submitted for verification at Etherscan.io on 2025-09-19
-*/
-
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
 contract CertificateVerification {
+
     struct Certificate {
         string studentName;
         string courseName;
         string issueDate;
         address issuer;
+        address student;   // <-- ADDED
         bool isValid;
     }
     
     mapping(string => Certificate) public certificates;
     mapping(address => bool) public authorizedIssuers;
-    
+    mapping(address => string[]) public certificatesByStudent; // <-- ADDED
+
     address public admin;
     
-    event CertificateIssued(string indexed certificateId, string studentName, string courseName);
+    event CertificateIssued(string indexed certificateId, string studentName, string courseName, address indexed student); // <-- updated
     event CertificateRevoked(string indexed certificateId);
     event IssuerAuthorized(address indexed issuer);
     
@@ -47,22 +46,28 @@ contract CertificateVerification {
         string memory _certificateId,
         string memory _studentName,
         string memory _courseName,
-        string memory _issueDate
+        string memory _issueDate,
+        address _studentAddress     // <-- ADDED
     ) public onlyAuthorizedIssuer {
         require(bytes(_certificateId).length > 0, "Certificate ID cannot be empty");
         require(certificates[_certificateId].issuer == address(0), "Certificate already exists");
-        
+        require(_studentAddress != address(0), "Invalid student address");
+
         certificates[_certificateId] = Certificate({
             studentName: _studentName,
             courseName: _courseName,
             issueDate: _issueDate,
             issuer: msg.sender,
+            student: _studentAddress,
             isValid: true
         });
-        
-        emit CertificateIssued(_certificateId, _studentName, _courseName);
+
+        certificatesByStudent[_studentAddress].push(_certificateId); // <-- ADDED
+
+        emit CertificateIssued(_certificateId, _studentName, _courseName, _studentAddress); // <-- UPDATED
     }
     
+    // PUBLIC verification allowed (no change)
     function verifyCertificate(string memory _certificateId) 
         public 
         view 
@@ -71,6 +76,7 @@ contract CertificateVerification {
             string memory courseName,
             string memory issueDate,
             address issuer,
+            address student,
             bool isValid
         ) 
     {
@@ -82,6 +88,7 @@ contract CertificateVerification {
             cert.courseName,
             cert.issueDate,
             cert.issuer,
+            cert.student,
             cert.isValid
         );
     }

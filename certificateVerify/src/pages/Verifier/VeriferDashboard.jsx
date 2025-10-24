@@ -68,7 +68,7 @@ function VeriferDashboard() {
             <div className='w-full mt-4 text-lg text-neutral-600'>Certificate Hash *</div>
 
             <div className='bg-neutral-200 w-full rounded-2xl hover:bg-neutral-100 mt-4'>
-              <input type="text" placeholder='Enter certificate hash (eg.0x1243...)' className='w-full p-4 rounded-2xl outline-none' />
+              <input type="text" placeholder='Enter certificate ID (eg."AIT-25-7468-RCT")' className='w-full p-4 rounded-2xl outline-none' />
             </div>
 
             <div className='text-neutral-500 mt-4'>

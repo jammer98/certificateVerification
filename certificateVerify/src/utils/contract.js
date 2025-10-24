@@ -1,8 +1,8 @@
 
 
-const CONTRACT_ADDRESS ="0x0cf5ffb83022f9c5a2b7417fea77e6c1009d79e6";
+const CONTRACT_ADDRESS ="0x965cCfD6B180F174177eDAB84a204CF0df3eA642";
 
-const Contract_abi = [
+const Contract_abi =[
 	{
 		"inputs": [],
 		"stateMutability": "nonpayable",
@@ -28,6 +28,12 @@ const Contract_abi = [
 				"internalType": "string",
 				"name": "courseName",
 				"type": "string"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "student",
+				"type": "address"
 			}
 		],
 		"name": "CertificateIssued",
@@ -135,9 +141,38 @@ const Contract_abi = [
 				"type": "address"
 			},
 			{
+				"internalType": "address",
+				"name": "student",
+				"type": "address"
+			},
+			{
 				"internalType": "bool",
 				"name": "isValid",
 				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "certificatesByStudent",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",
@@ -183,6 +218,11 @@ const Contract_abi = [
 				"internalType": "string",
 				"name": "_issueDate",
 				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "_studentAddress",
+				"type": "address"
 			}
 		],
 		"name": "issueCertificate",
@@ -231,6 +271,11 @@ const Contract_abi = [
 			{
 				"internalType": "address",
 				"name": "issuer",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "student",
 				"type": "address"
 			},
 			{
