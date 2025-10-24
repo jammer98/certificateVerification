@@ -10,13 +10,13 @@ function IssueNewCertificate() {
             certificateId:"",
             studentName:"",
             courseName:"",
-            issueDate:""
+            issueDate:"",
+            studentAddress:""
   });
 
   function handleChange(e){
-    setForm({ ...form , [e.target.name]: e.target.value } );
+    setForm({ ...form , [e.target.name]: e.target.value });
   }
-
 
 async function handelSubmitForm(event){
   event.preventDefault();
@@ -32,7 +32,8 @@ async function handelSubmitForm(event){
     const tx = await contract.issueCertificate( form.certificateId,
                                                 form.studentName,
                                                 form.courseName,
-                                                form.issueDate
+                                                form.issueDate,
+                                                form.studentAddress
     );
 
     await tx.wait();
@@ -46,8 +47,6 @@ async function handelSubmitForm(event){
   }
 }
 
-
-  
   return (
     <>
           <div className="top-0 z-50 sticky flex justify-between items-center p-2 max-w-7xl ml-31 bg-white">
@@ -112,6 +111,11 @@ async function handelSubmitForm(event){
                     <div className='p-3 flex flex-col'>
                       <label htmlFor="issueDate" className='text-lg ml-4 mb-2'>Issue Date</label>
                     <input type="date" name="issueDate" value={form.issueDate} onChange={handleChange} placeholder='Issue Date * [dd-mm-yyyy]' className='ml-4 border-1 rounded-lg p-3 w-full border-neutral-300 bg-neutral-100 hover:bg-white outline-none'/>
+                    </div>
+
+                    <div className='p-3 flex flex-col'>
+                      <label htmlFor="studentAddress" className='text-lg ml-4 mb-2'>Student's Address</label>
+                    <input type="text" name="studentAddress" value={form.studentAddress} onChange={handleChange} placeholder='enter the student address (eg.0xA1213....) *' className='ml-4 border-1 rounded-lg p-3 w-full border-neutral-300 bg-neutral-100 hover:bg-white outline-none'/>
                     </div>
 
                     <div className='text-center mt-6 mb-3 flex flex-row justify-center items-center '>

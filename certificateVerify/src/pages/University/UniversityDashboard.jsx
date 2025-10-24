@@ -14,7 +14,7 @@ function UniversityDashboard() {
     async function fetchCertificates(){
 
       try {
-        const contract = getContract();
+        const contract = await getContract();
         
         if(!contract){
           console.log("no contract babess");
@@ -33,11 +33,9 @@ function UniversityDashboard() {
             certificateId: event.args.certificateId,
             studentName: event.args.studentName,
             courseName: event.args.courseName,
-            issuer: signer
+            student: event.args.student
           }))
-          // filter only certificates issued by this wallet
-          .filter((cert) => cert.issuer.toLowerCase() === signer.toLowerCase());
-
+          
         setCertificates(certs);
       } 
       catch (error) {
@@ -45,6 +43,8 @@ function UniversityDashboard() {
       }
       
     }
+
+    fetchCertificates();
   },[])
 
 
@@ -132,6 +132,7 @@ function UniversityDashboard() {
                 <th className='border p-2'>Certificate ID</th>
                 <th className='border p-2'>Student Name</th>
                 <th className='border p-2'>Course Name</th>
+                <th className='border p-2'>Student Address</th>
               </tr>
             </thead>
             <tbody>
@@ -140,6 +141,7 @@ function UniversityDashboard() {
                   <td className='border p-2'>{cert.certificateId}</td>
                   <td className='border p-2'>{cert.studentName}</td>
                   <td className='border p-2'>{cert.courseName}</td>
+                  <td className='border p-2'>{cert.student.slice(0, 4) + "..." + cert.student.slice(-3)}</td>
                 </tr>
               ))}
             </tbody>
