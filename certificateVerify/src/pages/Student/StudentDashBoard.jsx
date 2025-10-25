@@ -1,11 +1,46 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { useAccountContext } from '../../Context/AccountContext';
+import { getContract } from '../../utils/provider';
 
 function StudentDashBoard() {
 
 
   const navigate = useNavigate();
+
+  const [certificates, setCertificates] = useState([]);
+
+  useEffect(() => {
+    loadCertificates();
+  }, []);
+
+  async function loadCertificates() {
+    const contract = await getContract();
+    if (!contract) return; // MetaMask not installed or error
+
+    const studentAddress = await contract.signer.getAddress();
+
+    // 1️⃣ Get all CertificateIssued events for this student
+    const filter = contract.filters.CertificateIssued(null, null, null, studentAddress);
+    const logs = await contract.queryFilter(filter, 0, "latest");
+
+    // 2️⃣ Extract certificate IDs
+    const certIds = logs.map(log => log.args.certificateId);
+
+    // 3️⃣ Fetch full details for each certificate
+    const certs = [];
+    for (let id of certIds) {
+      const cert = await contract.verifyCertificate(id);
+      certs.push({
+        id,                      // Certificate ID
+        courseName: cert.courseName,
+        issueDate: cert.issueDate,
+        issuer: cert.issuer,
+        isValid: cert.isValid
+      });
+    }
+
+    setCertificates(certs);
+  }
   
   return (
     <>
@@ -61,10 +96,12 @@ function StudentDashBoard() {
 
           <div className='flex justify-between items-center w-full mb-4 mt-2 '>
             <div className='ml-5 font-medium text-neutral-600 text-xl'>My Certificates</div>
-            <div className='bg-[hsl(216,89%,55%)] mr-7 px-5 py-1 border border-blue-300 rounded-md text-white text-center '>(var) Certificates</div>
+            <div className='bg-[hsl(216,89%,55%)] mr-7 px-5 py-1 border border-blue-300 rounded-md text-white text-center '>{`${certificates.length}`} Certificates</div>
           </div>
 
-          <div className='flex flex-col flex-1 justify-start items-center mt-2 rounded-xl w-full border-1 border-neutral-200 shadow-md'>
+
+          {certificates.length === 0 ? (
+            <div className='flex flex-col flex-1 justify-start items-center mt-2 rounded-xl w-full border-1 border-neutral-200 shadow-md'>
              <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -82,6 +119,31 @@ function StudentDashBoard() {
               <p className='mb-2 font-bold text-neutral-700 text-3xl'>No Certificates Yet</p>
               <p className='text-neutral-400 text-lg leading-10 tracking-tight'> Your academic certificates will appear here once they are issued by your institutions.</p>
           </div>
+          ) : (
+            <table className='w-full border border-gray-300 rounded-lg'>
+            <thead className='bg-gray-100'>
+              <tr>
+                <th className='border p-2'>Certificate ID</th>
+                <th className='border p-2'>Course Name</th>
+                <th className='border p-2'>Issue Date</th>
+                <th className='border p-2'>Issuer</th>
+                <th className='border p-2'>Is Valid</th>
+              </tr>
+            </thead>
+            <tbody>
+                {certificates.map((cert, idx) => (
+                  <tr key={idx} className='hover:bg-gray-50'>
+                    <td className='border p-2'>{cert.id}</td>
+                    <td className='border p-2'>{cert.courseName}</td>
+                    <td className='border p-2'>{cert.issueDate}</td>
+                    <td className='border p-2'>{cert.issuer}</td>
+                    <td className='border p-2'>{cert.isValid ? ( <span className='text-green-500'>YES</span>) : (<span className='text-red-500'>NO</span>) }</td>
+                  </tr>
+                  ))}
+              </tbody>
+          </table>
+          )}
+          
         </div>  
     </div>   
     </>   

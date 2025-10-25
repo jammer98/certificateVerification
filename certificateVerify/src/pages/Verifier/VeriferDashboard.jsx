@@ -1,9 +1,41 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router'
+import { getContract } from '../../utils/provider';
 
 function VeriferDashboard() {
 
   const navigate = useNavigate();
+
+    const [certificateId, setCertificateId] = useState('');
+  const [certificateData, setCertificateData] = useState(null);
+  const [error, setError] = useState('');
+
+  const handleVerify = async () => {
+    setError('');
+    setCertificateData(null);
+
+    if (!certificateId) return setError('Please enter a certificate ID');
+
+    try {
+      const contract = await getContract();
+      if (!contract) return;
+
+      // Call verifyCertificate on the smart contract
+      const cert = await contract.verifyCertificate(certificateId);
+
+      setCertificateData({
+        studentName: cert[0],
+        courseName: cert[1],
+        issueDate: cert[2],
+        issuer: cert[3],
+        student: cert[4],
+        isValid: cert[5],
+      });
+    } catch (err) {
+      console.error(err);
+      setError('Certificate not found or invalid');
+    }
+  };
 
 
  return (
@@ -70,7 +102,7 @@ function VeriferDashboard() {
             <div className='w-full mt-4 text-lg text-neutral-600'>Certificate Hash *</div>
 
             <div className='bg-neutral-200 w-full rounded-2xl hover:bg-neutral-100 mt-4'>
-              <input type="text" placeholder='Enter certificate ID (eg."AIT-25-7468-RCT")' className='w-full p-4 rounded-2xl outline-none' />
+              <input type="text" value={certificateId} onChange={(e) => setCertificateId(e.target.value)} placeholder='Enter certificate ID (eg."AIT-25-7468-RCT")' className='w-full p-4 rounded-2xl outline-none' />
             </div>
 
             <div className='text-neutral-500 mt-4'>
@@ -78,7 +110,7 @@ function VeriferDashboard() {
             </div>
 
             <div className='w-full rounded-2xl mt-4'>
-              <button className='flex items-center bg-[hsl(216,89%,55%)] w-full rounded-xl justify-center p-3 text-white text-shadow-md hover:bg-[hsl(216,89%,80%)] cursor-pointer'>
+              <button onClick={handleVerify} className='flex items-center bg-[hsl(216,89%,55%)] w-full rounded-xl justify-center p-3 text-white text-shadow-md hover:bg-[hsl(216,89%,80%)] cursor-pointer'>
                 <svg xmlns="http://www.w3.org/2000/svg" 
                       viewBox="0 0 24 24" 
                       fill="currentColor" 
@@ -90,6 +122,28 @@ function VeriferDashboard() {
               </button>
             </div>
           </div>
+
+          {error && <p className='text-red-500 mt-4 p-3'>{error}</p>}
+
+          {certificateData && (
+          <div className="mt-6 p-4 bg-gray-50 rounded-xl border border-gray-200 w-full">
+            <p><span className="font-semibold">Certificate ID:</span> {certificateId}</p>
+            <p><span className="font-semibold">Student Name:</span> {certificateData.studentName}</p>
+            <p><span className="font-semibold">Course Name:</span> {certificateData.courseName}</p>
+            <p><span className="font-semibold">Issued On:</span> {certificateData.issueDate}</p>
+            <p><span className="font-semibold">Issuer:</span> {certificateData.issuer}</p>
+            <p><span className="font-semibold">Student Address:</span> {certificateData.student}</p>
+            <p>
+              <span className="font-semibold">Valid:</span>{" "}
+              {certificateData.isValid ? (
+                <span className="text-green-500">YES</span>
+              ) : (
+                <span className="text-red-500">NO</span>
+              )}
+            </p>
+          </div>
+        )}
+
         </div>
     </div>   
     </> 
