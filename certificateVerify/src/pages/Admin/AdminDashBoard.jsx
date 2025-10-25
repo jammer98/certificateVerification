@@ -49,16 +49,18 @@ function AdminDashBoard() {
               </svg>
               <span>Back To Home</span>
             </button> 
+            <button className='bg-white hover:bg-neutral-100 p-2 rounded-full cursor-pointer' onClick={() => navigate("/")}>
               <svg xmlns="http://www.w3.org/2000/svg" 
               fill="none" 
               viewBox="0 0 24 24" 
               stroke-width="1.5" 
               stroke="currentColor" 
-              class="mr-7 size-7">
+              class="size-7">
               <path stroke-linecap="round" 
               stroke-linejoin="round" 
               d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
               </svg>
+            </button>
       </div>
 
   
@@ -107,12 +109,10 @@ function AdminDashBoard() {
               <p className='mb-2 font-bold text-neutral-500 text-3xl'>No Issuers Yet</p>
           </div>
         ) : (
-            <div className='bg-neutral-50 text-center w-full mt-2 rounded-xl border-1 border-neutral-200 shadow-md h-screen '>
-              <ul className="p-5 bg-neutral-200 rounded-2xl w-full shadow-md shadow-neutral-300 list-decimal cursor-pointer pl-9 hover:bg-neutral-100">
+            <div className='bg-neutral-50 w-full mt-2 rounded-xl border-1 border-neutral-200 shadow-md h-screen text-center'>
+              <ul className="shadow-neutral-300 space-y-6 mt-9 max-w-7xl flex flex-col items-center">
                 {issuers.map((issuer, index) => (
-                  <div className='text-neutral-700 text-xl ml-8'>
-                        <li key={index}>{issuer}</li>
-                    </div>
+                    <li key={index} className='text-xl p-4 w-6xl bg-neutral-200 text-neutral-600 rounded-2xl hover:bg-green-100 cursor-pointer'>{issuer}</li>
                   ))}
               </ul>
             </div>  

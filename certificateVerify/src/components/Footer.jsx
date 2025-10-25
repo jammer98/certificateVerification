@@ -18,7 +18,7 @@ function Footer() {
           <li><a href="/" className="hover:text-white">Home</a></li>
           <li><Link to="/StudentDashBoard" className="hover:text-white"> Student portal </Link></li>
           <li><Link to="/UniversityDashBoard" className="hover:text-white"> University Portal </Link></li>
-          <li><Link to="/VeriferDashBoard" className="hover:text-white"> verifier Portal </Link></li>
+          <li><Link to="/VeriferDashBoard" className="hover:text-white"> Verifier Portal </Link></li>
           <li><a href="https://github.com/jammer98/certificateVerification" target="_blank" className="hover:text-white"> Git Hub </a></li>
         </ul>
 
