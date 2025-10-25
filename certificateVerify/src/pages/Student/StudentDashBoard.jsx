@@ -19,7 +19,11 @@ function StudentDashBoard() {
         const events = await contract.queryFilter("CertificateIssued");
         
         // 2️⃣ Get current student address
-        const studentAddress = await contract.signer.getAddress();
+        const studentAddress = await contract.runner?.getAddress();
+        if(!studentAddress){
+          console.error(" no wallet connected");
+          return;
+        }
 
         // 3️⃣ Filter events for this student
         const studentEvents = events.filter(
@@ -29,18 +33,19 @@ function StudentDashBoard() {
         // 4️⃣ Fetch certificate details
         const certs = [];
         for (let e of studentEvents) {
-          const certId = e.args.certificateId;
+                const certId = typeof e.args.certificateId === "object" && e.args.certificateId.hash ? e.args.certificateId.hash : e.args.certificateId;
+
           const cert = await contract.verifyCertificate(certId);
           certs.push({
             id: certId,
+            studentName: cert.studentName,
             courseName: cert.courseName,
             issueDate: cert.issueDate,
             issuer: cert.issuer,
+            student: cert.student,
             isValid: cert.isValid,
-            studentName: cert.studentName,
-            student: cert.student
-          });
-        }
+        });
+}
 
         setCertificates(certs);
       } catch (error) {
