@@ -14,33 +14,33 @@ function StudentDashBoard() {
   }, []);
 
   async function loadCertificates() {
-    const contract = await getContract();
-    if (!contract) return; // MetaMask not installed or error
+  const contract = await getContract();
+  if (!contract) return;
 
-    const studentAddress = await contract.signer.getAddress();
+  const studentAddress = await contract.signer.getAddress();
 
-    // 1️⃣ Get all CertificateIssued events for this student
-    const filter = contract.filters.CertificateIssued(null, null, null, studentAddress);
-    const logs = await contract.queryFilter(filter, 0, "latest");
+  // 1️⃣ Get all CertificateIssued events for this student
+  const filter = contract.filters.CertificateIssued(null, null, null, studentAddress);
+  const logs = await contract.queryFilter(filter, 0, "latest");
 
-    // 2️⃣ Extract certificate IDs
-    const certIds = logs.map(log => log.args.certificateId);
+  // 2️⃣ Extract certificate IDs
+  const certIds = logs.map(log => log.args.certificateId);
 
-    // 3️⃣ Fetch full details for each certificate
-    const certs = [];
-    for (let id of certIds) {
-      const cert = await contract.verifyCertificate(id);
-      certs.push({
-        id,                      // Certificate ID
-        courseName: cert.courseName,
-        issueDate: cert.issueDate,
-        issuer: cert.issuer,
-        isValid: cert.isValid
-      });
-    }
-
-    setCertificates(certs);
+  // 3️⃣ Fetch full details for each certificate
+  const certs = [];
+  for (let id of certIds) {
+    const cert = await contract.verifyCertificate(id);
+    certs.push({
+      id,                      // Certificate ID
+      courseName: cert.courseName,
+      issueDate: cert.issueDate,
+      issuer: cert.issuer,
+      isValid: cert.isValid
+    });
   }
+
+  setCertificates(certs);
+}
   
   return (
     <>
