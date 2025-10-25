@@ -9,23 +9,38 @@ function UniversityDashboard() {
 
   const [certificates, setCertificates] = useState([]);
   const [currentAccount, setCurrentAccount] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchCertificates() {
       try {
+        if (!window.ethereum) {
+          console.log("MetaMask not available");
+          setLoading(false);
+          return;
+        }
+
+        // Get provider and signer
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const signerAddress = await signer.getAddress();
+        
+        setCurrentAccount(signerAddress);
+        console.log("Fetching certificates for issuer:", signerAddress);
+
+        // Get contract
         const contract = await getContract();
         
         if (!contract) {
           console.log("Contract not available");
+          setLoading(false);
           return;
         }
 
-        // Get current signer address
-        const signer = await contract.signer.getAddress();
-        setCurrentAccount(signer);
-
         // Use the dedicated contract function to get certificates by issuer
-        const certificatesList = await contract.getCertificatesByIssuer(signer);
+        const certificatesList = await contract.getCertificatesByIssuer(signerAddress);
+
+        console.log("Raw certificates list:", certificatesList);
 
         // Convert the result to a plain array of objects
         const certs = certificatesList.map((cert) => ({
@@ -37,11 +52,15 @@ function UniversityDashboard() {
           issuer: cert.issuer,
           isValid: cert.isValid
         }));
+
+        console.log("Processed certificates:", certs);
           
         setCertificates(certs);
+        setLoading(false);
       } 
       catch (error) {
         console.error("Error fetching certificates:", error);
+        setLoading(false);
       }
     }
 
@@ -55,11 +74,11 @@ function UniversityDashboard() {
               <svg xmlns="http://www.w3.org/2000/svg" 
               fill="none" 
               viewBox="0 0 24 24" 
-              stroke-width="1.5" 
+              strokeWidth="1.5" 
               stroke="currentColor" 
-              class="mr-3 size-5">
-              <path stroke-linecap="round" 
-              stroke-linejoin="round" 
+              className="mr-3 size-5">
+              <path strokeLinecap="round" 
+              strokeLinejoin="round" 
               d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
               </svg>
               <span>Back To Home</span>
@@ -68,11 +87,11 @@ function UniversityDashboard() {
               <svg xmlns="http://www.w3.org/2000/svg" 
               fill="none" 
               viewBox="0 0 24 24" 
-              stroke-width="1.5" 
+              strokeWidth="1.5" 
               stroke="currentColor" 
-              class="size-7">
-              <path stroke-linecap="round" 
-              stroke-linejoin="round" 
+              className="size-7">
+              <path strokeLinecap="round" 
+              strokeLinejoin="round" 
               d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
               </svg>
             </button>
@@ -86,55 +105,46 @@ function UniversityDashboard() {
              <svg xmlns="http://www.w3.org/2000/svg" 
                 fill="none" 
                 viewBox="0 0 24 24" 
-                stroke-width="1.5" 
+                strokeWidth="1.5" 
                 stroke="currentColor" 
                 className ="size-12 bg-[hsl(162,46%,89%)] text-[hsl(161,88%,32%)] p-3 rounded-full">
-                <path stroke-linecap="round" 
-                stroke-linejoin="round" 
+                <path strokeLinecap="round" 
+                strokeLinejoin="round" 
                 d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" 
                 />
                 </svg>
               <h1 className='ml-4 font-bold text-neutral-700 text-2xl'>University DashBoard</h1>
           </div>
 
-          {/* <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mt-6'>
-            <div className='bg-gradient-to-br from-green-50 to-emerald-50 p-4 rounded-xl border border-green-100'>
-              <div className='flex items-center justify-between'>
-                <div>
-                  <p className='text-sm text-green-600 font-medium'>Total Issued</p>
-                  <p className='text-2xl font-bold text-green-700 mt-1'>{certificates.length}</p>
-                </div> */}
-                {/* <div className='p-3 bg-green-100 rounded-lg'>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-6 h-6 text-green-600">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                  </svg>
-                </div>
-              </div>
-            </div> */}
           <div className='flex justify-start items-center w-full mb-4 mt-2 '>
            <button onClick={()=>navigate("/UniversityDashBoard/IssueNewCertificate")} className='bg-[hsl(216,89%,55%)] p-2 text-center hover:bg-[hsl(216,89%,80%)] rounded-lg flex justify-start ml-5 mt-3 items-center tracking-wide cursor-pointer'>
 
             <svg xmlns="http://www.w3.org/2000/svg" 
             viewBox="0 0 24 24" 
             fill="currentColor" 
-            class="size-6 text-white">
-            <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+            className="size-6 text-white">
+            <path fillRule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clipRule="evenodd" />
             </svg>
             <span className='ml-2 mr-3 text-white'>Issue New Certificates</span>
            </button>
           </div>
 
 
-            {certificates.length === 0 ? (
+          {loading ? (
+            <div className='flex flex-col flex-1 justify-center items-center mt-20 rounded-xl w-full'>
+              <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mb-4'></div>
+              <p className='text-neutral-500'>Loading certificates...</p>
+            </div>
+          ) : certificates.length === 0 ? (
               <div className='flex flex-col flex-1 justify-start items-center mt-2 rounded-xl w-full'>
                 <svg xmlns="http://www.w3.org/2000/svg" 
                   fill="none" 
                   viewBox="0 0 24 24" 
-                  stroke-width="1.5" 
+                  strokeWidth="1.5" 
                   stroke="currentColor" 
                   className ="mt-36 mb-6 size-14 text-neutral-500 ">
-                <path stroke-linecap="round" 
-                  stroke-linejoin="round" 
+                <path strokeLinecap="round" 
+                  strokeLinejoin="round" 
                   d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" 
                 />
                 </svg>
@@ -142,7 +152,7 @@ function UniversityDashboard() {
                   <p className='text-neutral-400 text-lg leading-10 tracking-tight text-balance text-center'> Create blockchain-secured certificates for your students each certificate will be permanently recorded and verifiable.</p>
             </div>
             ) : (
-          <div className='bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden'>
+          <div className='bg-neutral-100 rounded-xl shadow-lg border border-gray-100 w-full mt-5'>
             <div className='overflow-x-auto'>
               <table className='w-full'>
                 <thead className='bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200'>
