@@ -11,7 +11,7 @@ function Navbar({PortalSelectionRef}) {
   
   // const [logindropdown,setLogindropdown] = useState(false);
   // const dropdownRef = useRef(null);
-  const adminWalletAddress = "0x4Df0653693F0B5627e7b870dF3356593a0bBB29a";
+  const adminWalletAddress = "0x36bd597ac810c93d53082324488E98E71491cf83";
 
   // const connectWallet = async () => {
   //   try {

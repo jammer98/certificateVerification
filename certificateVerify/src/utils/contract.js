@@ -1,6 +1,6 @@
 
 
-const CONTRACT_ADDRESS ="0x965cCfD6B180F174177eDAB84a204CF0df3eA642";
+const CONTRACT_ADDRESS ="0xB2a37a8C0de31C48aAFD4026159d603418c78456";
 
 const Contract_abi =[
 	{
@@ -12,7 +12,7 @@ const Contract_abi =[
 		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": true,
+				"indexed": false,
 				"internalType": "string",
 				"name": "certificateId",
 				"type": "string"
@@ -34,6 +34,18 @@ const Contract_abi =[
 				"internalType": "address",
 				"name": "student",
 				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "issuer",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "issueDate",
+				"type": "string"
 			}
 		],
 		"name": "CertificateIssued",
@@ -63,6 +75,19 @@ const Contract_abi =[
 			}
 		],
 		"name": "IssuerAuthorized",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "issuer",
+				"type": "address"
+			}
+		],
+		"name": "IssuerRevoked",
 		"type": "event"
 	},
 	{
@@ -114,74 +139,6 @@ const Contract_abi =[
 		"inputs": [
 			{
 				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"name": "certificates",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "studentName",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "courseName",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "issueDate",
-				"type": "string"
-			},
-			{
-				"internalType": "address",
-				"name": "issuer",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "student",
-				"type": "address"
-			},
-			{
-				"internalType": "bool",
-				"name": "isValid",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "certificatesByStudent",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
 				"name": "_certificateId",
 				"type": "string"
 			}
@@ -192,6 +149,205 @@ const Contract_abi =[
 				"internalType": "bool",
 				"name": "",
 				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getAllIssuers",
+		"outputs": [
+			{
+				"internalType": "address[]",
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_issuer",
+				"type": "address"
+			}
+		],
+		"name": "getCertificatesByIssuer",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "certificateId",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "studentName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "courseName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "issueDate",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "issuer",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "student",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "isValid",
+						"type": "bool"
+					}
+				],
+				"internalType": "struct CertificateVerification.Certificate[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_student",
+				"type": "address"
+			}
+		],
+		"name": "getCertificatesByStudent",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "certificateId",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "studentName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "courseName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "issueDate",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "issuer",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "student",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "isValid",
+						"type": "bool"
+					}
+				],
+				"internalType": "struct CertificateVerification.Certificate[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getIssuersWithStatus",
+		"outputs": [
+			{
+				"internalType": "address[]",
+				"name": "",
+				"type": "address[]"
+			},
+			{
+				"internalType": "bool[]",
+				"name": "",
+				"type": "bool[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_student",
+				"type": "address"
+			}
+		],
+		"name": "getValidCertificatesByStudent",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "certificateId",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "studentName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "courseName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "issueDate",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "issuer",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "student",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "isValid",
+						"type": "bool"
+					}
+				],
+				"internalType": "struct CertificateVerification.Certificate[]",
+				"name": "",
+				"type": "tuple[]"
 			}
 		],
 		"stateMutability": "view",
@@ -246,6 +402,32 @@ const Contract_abi =[
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "_issuer",
+				"type": "address"
+			}
+		],
+		"name": "revokeIssuer",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_newAdmin",
+				"type": "address"
+			}
+		],
+		"name": "transferAdmin",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "string",
 				"name": "_certificateId",
 				"type": "string"
@@ -254,40 +436,52 @@ const Contract_abi =[
 		"name": "verifyCertificate",
 		"outputs": [
 			{
-				"internalType": "string",
-				"name": "studentName",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "courseName",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "issueDate",
-				"type": "string"
-			},
-			{
-				"internalType": "address",
-				"name": "issuer",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "student",
-				"type": "address"
-			},
-			{
-				"internalType": "bool",
-				"name": "isValid",
-				"type": "bool"
+				"components": [
+					{
+						"internalType": "string",
+						"name": "certificateId",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "studentName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "courseName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "issueDate",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "issuer",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "student",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "isValid",
+						"type": "bool"
+					}
+				],
+				"internalType": "struct CertificateVerification.Certificate",
+				"name": "",
+				"type": "tuple"
 			}
 		],
 		"stateMutability": "view",
 		"type": "function"
 	}
-];
+]
 
 // export const getContract = async () => {
 //   if (!window.ethereum) {

@@ -8,45 +8,45 @@ function UniversityDashboard() {
   const navigate = useNavigate(); 
 
   const [certificates, setCertificates] = useState([]);
-  const [currentAccount,setCurrentAccount] = useState(null);
+  const [currentAccount, setCurrentAccount] = useState(null);
 
-  useEffect(() =>{
-    async function fetchCertificates(){
-
+  useEffect(() => {
+    async function fetchCertificates() {
       try {
         const contract = await getContract();
         
-        if(!contract){
-          console.log("no contract babess");
+        if (!contract) {
+          console.log("Contract not available");
           return;
         }
 
+        // Get current signer address
         const signer = await contract.signer.getAddress();
         setCurrentAccount(signer);
 
-        const events = await contract.queryFilter(contract.filters.CertificateIssued());
+        // Use the dedicated contract function to get certificates by issuer
+        const certificatesList = await contract.getCertificatesByIssuer(signer);
 
-        // Map events to certificate objects
-        const certs = events
-          .filter((event) => event.args) // sanity check
-          .map((event) => ({
-            certificateId: event.args.certificateId,
-            studentName: event.args.studentName,
-            courseName: event.args.courseName,
-            student: event.args.student
-          }))
+        // Convert the result to a plain array of objects
+        const certs = certificatesList.map((cert) => ({
+          certificateId: cert.certificateId,
+          studentName: cert.studentName,
+          courseName: cert.courseName,
+          issueDate: cert.issueDate,
+          student: cert.student,
+          issuer: cert.issuer,
+          isValid: cert.isValid
+        }));
           
         setCertificates(certs);
       } 
       catch (error) {
-        console.error("error fetching the certificates",error);
+        console.error("Error fetching certificates:", error);
       }
-      
     }
 
     fetchCertificates();
-  },[])
-
+  }, []);
 
   return (
     <>
@@ -97,6 +97,20 @@ function UniversityDashboard() {
               <h1 className='ml-4 font-bold text-neutral-700 text-2xl'>University DashBoard</h1>
           </div>
 
+          {/* <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mt-6'>
+            <div className='bg-gradient-to-br from-green-50 to-emerald-50 p-4 rounded-xl border border-green-100'>
+              <div className='flex items-center justify-between'>
+                <div>
+                  <p className='text-sm text-green-600 font-medium'>Total Issued</p>
+                  <p className='text-2xl font-bold text-green-700 mt-1'>{certificates.length}</p>
+                </div> */}
+                {/* <div className='p-3 bg-green-100 rounded-lg'>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-6 h-6 text-green-600">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                  </svg>
+                </div>
+              </div>
+            </div> */}
           <div className='flex justify-start items-center w-full mb-4 mt-2 '>
            <button onClick={()=>navigate("/UniversityDashBoard/IssueNewCertificate")} className='bg-[hsl(216,89%,55%)] p-2 text-center hover:bg-[hsl(216,89%,80%)] rounded-lg flex justify-start ml-5 mt-3 items-center tracking-wide cursor-pointer'>
 
@@ -128,27 +142,57 @@ function UniversityDashboard() {
                   <p className='text-neutral-400 text-lg leading-10 tracking-tight text-balance text-center'> Create blockchain-secured certificates for your students each certificate will be permanently recorded and verifiable.</p>
             </div>
             ) : (
-               <table className='w-full border border-gray-300 rounded-lg'>
-            <thead className='bg-gray-100'>
-              <tr>
-                <th className='border p-2'>Certificate ID</th>
-                <th className='border p-2'>Student Name</th>
-                <th className='border p-2'>Course Name</th>
-                <th className='border p-2'>Student Address</th>
-              </tr>
-            </thead>
-            <tbody>
-              {certificates.map((cert, idx) => (
-                <tr key={idx} className='hover:bg-gray-50'>
-                  <td className='border p-2'>{cert.certificateId}</td>
-                  <td className='border p-2'>{cert.studentName}</td>
-                  <td className='border p-2'>{cert.courseName}</td>
-                  <td className='border p-2'>{cert.student.slice(0, 4) + "..." + cert.student.slice(-3)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-            ) }
+          <div className='bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden'>
+            <div className='overflow-x-auto'>
+              <table className='w-full'>
+                <thead className='bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200'>
+                  <tr>
+                    <th className='px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider'>Certificate ID</th>
+                    <th className='px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider'>Student Name</th>
+                    <th className='px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider'>Course Name</th>
+                    <th className='px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider'>Issue Date</th>
+                    <th className='px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider'>Student Address</th>
+                  </tr>
+                </thead>
+                <tbody className='divide-y divide-gray-200'>
+                  {certificates.map((cert, idx) => (
+                    <tr key={idx} className='hover:bg-gray-50 transition-colors'>
+                      <td className='px-6 py-4 whitespace-nowrap'>
+                        <div className='flex items-center gap-2'>
+                          <div className='p-2 bg-blue-100 rounded-lg'>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-4 h-4 text-blue-600">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z" />
+                            </svg>
+                          </div>
+                          <span className='text-sm font-medium text-gray-900'>{cert.certificateId}</span>
+                        </div>
+                      </td>
+                      <td className='px-6 py-4 whitespace-nowrap'>
+                        <span className='text-sm text-gray-900 font-medium'>{cert.studentName}</span>
+                      </td>
+                      <td className='px-6 py-4'>
+                        <span className='text-sm text-gray-700'>{cert.courseName}</span>
+                      </td>
+                      <td className='px-6 py-4 whitespace-nowrap'>
+                        <div className='flex items-center gap-2'>
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4 text-gray-400">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                          </svg>
+                          <span className='text-sm text-gray-600'>{cert.issueDate}</span>
+                        </div>
+                      </td>
+                      <td className='px-6 py-4 whitespace-nowrap'>
+                        <code className='px-3 py-1 bg-gray-100 rounded-lg text-xs font-mono text-gray-700'>
+                          {cert.student.slice(0, 6)}...{cert.student.slice(-4)}
+                        </code>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ) }
           
         </div>  
     </div>   
@@ -156,4 +200,4 @@ function UniversityDashboard() {
   )
 }
 
-export default UniversityDashboard
+export default UniversityDashboard;
