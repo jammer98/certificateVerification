@@ -10,37 +10,46 @@ function StudentDashBoard() {
   const [certificates, setCertificates] = useState([]);
 
   useEffect(() => {
-    loadCertificates();
+    const fetchCertificates = async () => {
+      try {
+        const contract = await getContract();
+        if (!contract) return;
+
+        // 1️⃣ Query all CertificateIssued events
+        const events = await contract.queryFilter("CertificateIssued");
+        
+        // 2️⃣ Get current student address
+        const studentAddress = await contract.signer.getAddress();
+
+        // 3️⃣ Filter events for this student
+        const studentEvents = events.filter(
+          (e) => e.args.student.toLowerCase() === studentAddress.toLowerCase()
+        );
+
+        // 4️⃣ Fetch certificate details
+        const certs = [];
+        for (let e of studentEvents) {
+          const certId = e.args.certificateId;
+          const cert = await contract.verifyCertificate(certId);
+          certs.push({
+            id: certId,
+            courseName: cert.courseName,
+            issueDate: cert.issueDate,
+            issuer: cert.issuer,
+            isValid: cert.isValid,
+            studentName: cert.studentName,
+            student: cert.student
+          });
+        }
+
+        setCertificates(certs);
+      } catch (error) {
+        console.error("Error fetching certificatesssssssssssssssssssss:", error);
+      }
+    };
+
+    fetchCertificates();
   }, []);
-
-  async function loadCertificates() {
-  const contract = await getContract();
-  if (!contract) return;
-
-  const studentAddress = await contract.signer.getAddress();
-
-  // 1️⃣ Get all CertificateIssued events for this student
-  const filter = contract.filters.CertificateIssued(null, null, null, studentAddress);
-  const logs = await contract.queryFilter(filter, 0, "latest");
-
-  // 2️⃣ Extract certificate IDs
-  const certIds = logs.map(log => log.args.certificateId);
-
-  // 3️⃣ Fetch full details for each certificate
-  const certs = [];
-  for (let id of certIds) {
-    const cert = await contract.verifyCertificate(id);
-    certs.push({
-      id,                      // Certificate ID
-      courseName: cert.courseName,
-      issueDate: cert.issueDate,
-      issuer: cert.issuer,
-      isValid: cert.isValid
-    });
-  }
-
-  setCertificates(certs);
-}
   
   return (
     <>
@@ -134,9 +143,11 @@ function StudentDashBoard() {
                 {certificates.map((cert, idx) => (
                   <tr key={idx} className='hover:bg-gray-50'>
                     <td className='border p-2'>{cert.id}</td>
+                     <td className='border p-2'>{cert.studentName}</td>
                     <td className='border p-2'>{cert.courseName}</td>
                     <td className='border p-2'>{cert.issueDate}</td>
                     <td className='border p-2'>{cert.issuer}</td>
+                    <td className='border p-2'>{cert.student}</td>
                     <td className='border p-2'>{cert.isValid ? ( <span className='text-green-500'>YES</span>) : (<span className='text-red-500'>NO</span>) }</td>
                   </tr>
                   ))}
