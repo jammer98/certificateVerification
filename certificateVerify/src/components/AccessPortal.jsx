@@ -196,8 +196,3 @@ const AccessPortal = forwardRef((prop, ref) => {
 
 export default AccessPortal;
 
-
-
-
-
-g
